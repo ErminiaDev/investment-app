@@ -5,6 +5,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { calculateInvestmentResults } from '../util/investment';
 
 function createData(year, investmentValue, interest, totalInterest, investedCapital) {
   return { year, investmentValue, interest, totalInterest, investedCapital };
@@ -18,7 +19,10 @@ const rows = [
   createData(5, "24627€", "1237€", "5127€", "19500€"),
 ];
 
-export default function InvestmentTable() {
+export default function InvestmentTable({userInput}) {
+	const resultsData = calculateInvestmentResults(userInput);
+
+	console.log(resultsData);
   return (
 	<TableContainer sx={{ marginTop:"5em", width: "50em"}} component={Paper}>
 	  <Table  aria-label="simple table">
@@ -32,18 +36,18 @@ export default function InvestmentTable() {
 		  </TableRow>
 		</TableHead>
 		<TableBody>
-		  {rows.map((row) => (
+		  {resultsData.map((results) => (
 			<TableRow
-			  key={row.name}
+			  key={results.name}
 			  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
 			>
 			  <TableCell component="th" scope="row">
-				{row.year}
+				{results.year}
 			  </TableCell>
-			  <TableCell align="right">{row.investmentValue}</TableCell>
-			  <TableCell align="right">{row.interest}</TableCell>
-			  <TableCell align="right">{row.totalInterest}</TableCell>
-			  <TableCell align="right">{row.investedCapital}</TableCell>
+			  <TableCell align="right">{results.valueEndOfYear}</TableCell>
+			  <TableCell align="right">{results.interest}</TableCell>
+			  <TableCell align="right">{results.totalInterest}</TableCell>
+			  <TableCell align="right">{results.investedCapital}</TableCell>
 			</TableRow>
 		  ))}
 		</TableBody>
