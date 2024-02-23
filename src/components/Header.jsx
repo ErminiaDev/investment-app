@@ -9,7 +9,7 @@ export default function Header({}) {
         src="src/assets/investment-calculator-logo.png"
         alt=""
       />
-      <Typography variant="h3">React Investment Calculator</Typography>
+      <Typography variant="h3">Investment Calculator</Typography>
     </Stack>
   );
 }
