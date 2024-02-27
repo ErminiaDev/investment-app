@@ -1,22 +1,23 @@
 import { Stack, Typography } from "@mui/material";
 import Header from "./components/Header";
 import UserInput from "./components/UserInput";
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
 import InvestmentTable from "./components/InvestmentTable";
 import { useState } from "react";
+import { EURformatter, USDformatter } from "./util/investment";
 
 const darkTheme = createTheme({
   palette: {
-    mode: 'dark',
+    mode: "dark",
   },
   overrides: {
     MuiButton: {
       primary: {
-        color: 'white',
+        color: "white",
       },
     },
-  }
+  },
 });
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
     expectedReturn: 6,
     duration: 10,
   });
+  const [format, setFormat] = useState(EURformatter);
 
   const inputIsValid = userInput.duration >= 1;
   //need to force input to a number value
@@ -38,32 +40,43 @@ function App() {
     });
   }
 
-  function handleClear(){
+  function handleClear() {
     setUserInput({
       initialInvestment: 0,
       annualInvestment: 0,
       expectedReturn: 0,
-      duration:  0,
-    })
+      duration: 0,
+    });
   }
-  function handleCurrency(value){
-    const selectedCurrency = value;
-    return selectedCurrency;
-  };
+  function handleCurrency(currency) {
+    if(currency==="EUR"){
+      setFormat(EURformatter)
+    } else {
+      setFormat(USDformatter)
+    }
+    console.log(format, currency);
+  }
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <CssBaseline/>
+      <CssBaseline />
       <Stack alignItems="center">
-        <Header/>
-        <UserInput userInput={userInput} onChange={handleChange} onClick={handleCurrency} onClear={handleClear}/>
-        {!inputIsValid && <Typography mt={3}>Please enter a valid duration</Typography>}
-        {inputIsValid && <InvestmentTable userInput={userInput} currency={selectedCurrency}/>}
+        <Header />
+        <UserInput
+          userInput={userInput}
+          onChange={handleChange}
+          onClick={handleCurrency}
+          onClear={handleClear}
+        />
+        {!inputIsValid && (
+          <Typography mt={3}>Please enter a valid duration</Typography>
+        )}
+        {inputIsValid && (
+          <InvestmentTable userInput={userInput} formatter={format}/>
+        )}
       </Stack>
     </ThemeProvider>
-    
-    
-  )
+  );
 }
 
-export default App
+export default App;

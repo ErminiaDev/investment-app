@@ -6,14 +6,10 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import {
-  calculateInvestmentResults,
-  EURformatter,
-  USDformatter,
+  calculateInvestmentResults
 } from "../util/investment";
 
-export default function InvestmentTable({ userInput, currency }) {
-  const [currency, setCurrency] = useState('');
-
+export default function InvestmentTable({ userInput, formatter }) {
   const resultsData = calculateInvestmentResults(userInput);
 
   const initialInvestment =
@@ -22,7 +18,6 @@ export default function InvestmentTable({ userInput, currency }) {
     resultsData[0].annualInvestment;
 
   console.log(resultsData);
-  console.log("component", currency);
   return (
     <TableContainer sx={{ marginTop: "5em", width: "50em" }} component={Paper}>
       <Table aria-label="simple table">
@@ -42,59 +37,29 @@ export default function InvestmentTable({ userInput, currency }) {
               results.annualInvestment * results.year -
               initialInvestment;
             const totalAmountInvested = results.valueEndOfYear - totalInterest;
-
-            {
-              if (currency === "EUR") {
-				console.log('EURcomponent' ,currency)
-                return (
-                  <TableRow
-                    key={results.name}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell component="th" scope="row">
-                      {results.year}
-                    </TableCell>
-                    <TableCell align="right">
-                      {EURformatter.format(results.valueEndOfYear)}
-                    </TableCell>
-                    <TableCell align="right">
-                      {EURformatter.format(results.interest)}
-                    </TableCell>
-                    <TableCell align="right">
-                      {EURformatter.format(totalInterest)}
-                    </TableCell>
-                    <TableCell align="right">
-                      {EURformatter.format(totalAmountInvested)}
-                    </TableCell>
-                  </TableRow>
-                );
-              } else {
-				console.log('USDcomponent' ,currency);
-                return (
-                  <TableRow
-                    key={results.name}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell component="th" scope="row">
-                      {results.year}
-                    </TableCell>
-                    <TableCell align="right">
-                      {USDformatter.format(results.valueEndOfYear)}
-                    </TableCell>
-                    <TableCell align="right">
-                      {USDformatter.format(results.interest)}
-                    </TableCell>
-                    <TableCell align="right">
-                      {USDformatter.format(totalInterest)}
-                    </TableCell>
-                    <TableCell align="right">
-                      {USDformatter.format(totalAmountInvested)}
-                    </TableCell>
-                  </TableRow>
-                );
-              }
-            }
-          })}
+            return (
+              <TableRow
+                key={results.name}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell component="th" scope="row">
+                  {results.year}
+                </TableCell>
+                <TableCell align="right">
+                  {formatter.format(results.valueEndOfYear)}
+                </TableCell>
+                <TableCell align="right">
+                  {formatter.format(results.interest)}
+                </TableCell>
+                <TableCell align="right">
+                  {formatter.format(totalInterest)}
+                </TableCell>
+                <TableCell align="right">
+                  {formatter.format(totalAmountInvested)}
+                </TableCell>
+              </TableRow>
+            );
+          })};
         </TableBody>
       </Table>
     </TableContainer>
